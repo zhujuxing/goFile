@@ -44,8 +44,8 @@ func main() {
 	monteCarloNum := 1000
 	//monteCarloNum := 1000
 
-	cpuNum := 12
-	fmt.Println("Maximum CPu num:", runtime.NumCPU())
+	cpuNum := 8
+	fmt.Println("Maximum CPU num:", runtime.NumCPU())
 	cpuNumNew := runtime.GOMAXPROCS(cpuNum)
 	fmt.Println("Pre-configure CPU num:", cpuNumNew)
 	fmt.Println("After-configure CPU num:", cpuNum)
