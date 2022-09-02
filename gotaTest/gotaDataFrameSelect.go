@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-gota/gota/dataframe"
+	"github.com/go-gota/gota/series"
 	"log"
 	"os"
 )
@@ -40,10 +41,58 @@ func main() {
 
 	fmt.Println(dataFrame2)
 
+	age33 := df.Filter(
+		dataframe.F{
+			Colname:    "Age",
+			Comparator: series.Eq,
+			Comparando: 35,
+		},
+		dataframe.F{
+			Colname:    "Age",
+			Comparator: series.Eq,
+			Comparando: 33,
+		},
+	)
+	fmt.Println(age33)
+
+	age33violet := df.Filter(
+		dataframe.F{
+			Colname:    "Age",
+			Comparator: series.Eq,
+			Comparando: 33,
+		}).Filter(
+		dataframe.F{
+			Colname:    "Colour",
+			Comparator: series.Eq,
+			Comparando: "violet",
+		})
+
+	fmt.Println(age33violet)
+
+	fmt.Println(df.Arrange(dataframe.Sort("Age")))
+
+	maxAge := df.Capply(
+		func(col series.Series) series.Series {
+			return series.Ints(col.Max())
+		})
+	fmt.Println(maxAge)
+
+	fun := func(row series.Series) series.Series {
+		fmt.Println(row)
+		return row
+	}
+	fmt.Println(df.Rapply(fun))
+
+	//df1 := df.Rapply(
+	//	func(row series.Series) series.Series {
+	//
+	//		return
+	//	})
 	// 更多gota的相关操作和例子，可以参考下面网址：
 	//https://blog.csdn.net/weixin_32023091/article/details/112449908
 
 	//df.Capply(
 	//	func())
+	df.Maps()
 
 }

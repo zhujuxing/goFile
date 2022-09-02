@@ -50,7 +50,7 @@ func main() {
 	fmt.Println("Pre-configure CPU num:", cpuNumNew)
 	fmt.Println("After-configure CPU num:", cpuNum)
 
-	t1 := time.Now()
+	//t1 := time.Now()
 
 	g := simple.NewDirectedGraph()
 	err := gen.Gnp(g, n, p, nil)
@@ -69,6 +69,26 @@ func main() {
 		attr[k] = attrOfNode
 	}
 
+	printAfterCalAll(monteCarloNum, g, n, attackRate, attr)
+	printWhileCal(monteCarloNum, g, n, attackRate, attr)
+}
+
+func printWhileCal(monteCarloNum int, g *simple.DirectedGraph, n int, attackRate float64, attr map[int64]map[string]float64) {
+	t1 := time.Now()
+	res := make(chan int, monteCarloNum)
+	for i := 0; i < monteCarloNum; i++ {
+		go CascadeFailure(g, n, attackRate, attr, res)
+		go func(c <-chan int) {
+			fmt.Printf("第次仿真后，网络存在%d个节点\n", <-res)
+		}(res)
+	}
+
+	t2 := time.Since(t1)
+	fmt.Println("花费时间：", t2)
+}
+
+func printAfterCalAll(monteCarloNum int, g *simple.DirectedGraph, n int, attackRate float64, attr map[int64]map[string]float64) {
+	t1 := time.Now()
 	//res := make(map[int]int)
 	res := make([]chan int, monteCarloNum)
 	for i := 0; i < monteCarloNum; i++ {
